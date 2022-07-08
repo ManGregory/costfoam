@@ -7,7 +7,7 @@
     <title>Расчет стоимости напыления пенополиуретана (ППУ)</title>
     <script type="text/javascript">
         // <![CDATA[
-        function pn_changed() {
+        function calcCostFoam() {
             var c1_k = 25;
             var tn = document.getElementById('c1');
             var c1 = parseInt(tn.value, 10);
@@ -63,89 +63,53 @@
                 c11 = 0;
                 document.getElementById('c11').value = c11;
             }
-            var c13 = norm(c7 + c8 + c9 + c10 + c11);
+            var c13 = convertToNum(c7 + c8 + c9 + c10 + c11);
             document.getElementById('c13').innerHTML = c13;
-            var c14 = norm(c13 * c3 / 1000);
+            var c14 = convertToNum(c13 * c3 / 1000);
             document.getElementById('c14').innerHTML = c14;
-            var c15 = norm((c4 + 8) * c3 / 1000);
+            var c15 = convertToNum((c4 + 8) * c3 / 1000);
             document.getElementById('c15').innerHTML = c15;
-            var c16 = norm(c13 * c15);
+            var c16 = convertToNum(c13 * c15);
             document.getElementById('c16').innerHTML = c16;
             // =IF(C4=40;IF(C14<5;12000;IF(C14<10;11000;IF(C14<15;10000;9000)))*IF(C3<50;1.1;1);IF(C14<5;15500;IF(C14<10;14500;IF(C14<15;12500;11000)))*IF(C3<50;1.1;1))
-            var c17 = norm((c4 == 40 ? (c13 < 100 ? 200 : (c13 < 200 ? 190 : (c13 < 500 ? 175 : 175))) : (c13 < 100 ? 290 : (c13 < 275 ? 275 : (c13 < 500 ? 250 : 250)))) * c3_k * c1);
+            var c17 = convertToNum((c4 == 40 ? (c13 < 100 ? 200 : (c13 < 200 ? 190 : (c13 < 500 ? 175 : 175))) : (c13 < 100 ? 290 : (c13 < 275 ? 275 : (c13 < 500 ? 250 : 250)))) * c3_k * c1);
             document.getElementById('c17').innerHTML = c17;
-            var e7 = norm(c17 * c3 / 1000);
+            var e7 = convertToNum(c17 * c3 / 1000);
             document.getElementById('e7').innerHTML = e7;
-            var e8 = norm(c17 * c3 / 1000);
+            var e8 = convertToNum(c17 * c3 / 1000);
             document.getElementById('e8').innerHTML = e8;
-            var e9 = norm(c17 * c3 / 1000 * 1.1);
+            var e9 = convertToNum(c17 * c3 / 1000 * 1.1);
             document.getElementById('e9').innerHTML = e9;
-            var e10 = norm(c17 * c3 / 1000 * 1.2);
+            var e10 = convertToNum(c17 * c3 / 1000 * 1.2);
             document.getElementById('e10').innerHTML = e10;
-            var e11 = norm(c17 * c3 / 1000 * 1.2);
+            var e11 = convertToNum(c17 * c3 / 1000 * 1.2);
             document.getElementById('e11').innerHTML = e11;
-            var f7 = norm(c7 * e7);
+            var f7 = convertToNum(c7 * e7);
             document.getElementById('f7').innerHTML = f7;
-            var f8 = norm(c8 * e8);
+            var f8 = convertToNum(c8 * e8);
             document.getElementById('f8').innerHTML = f8;
-            var f9 = norm(c9 * e9);
+            var f9 = convertToNum(c9 * e9);
             document.getElementById('f9').innerHTML = f9;
-            var f10 = norm(c10 * e10);
+            var f10 = convertToNum(c10 * e10);
             document.getElementById('f10').innerHTML = f10;
-            var f11 = norm(c11 * e11);
+            var f11 = convertToNum(c11 * e11);
             document.getElementById('f11').innerHTML = f11;
             //var c18 = 1*f7+1*f8+1*f9+1*f10+1*f11;
-            var c18 = norm(f7 + f8 + f9 + f10 + f11);
+            var c18 = convertToNum(f7 + f8 + f9 + f10 + f11);
             //var c18 = f7.toFixed(2)+f8.toFixed(2)+f9.toFixed(2)+f10.toFixed(2)+f11.toFixed(2);
             //c18 = c18==0?0:(c18<30000?30000:c18);
             document.getElementById('c18').innerHTML = c18;
-            $('#c17').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#c18').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#f7').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#f8').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#f9').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#f10').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
-            $('#f11').currency({
-                s: " ",
-                d: ".",
-                c: 2
-            });
         }
 
-        function norm(x) {
+        function convertToNum(x) {
             if (isNaN(x)) {
                 return 0;
             }
             var n = new Number(x);
             return new Number(n.toFixed(2));
-            //return n;
         }
 
-        function do_submit() {
+        function sendData() {
             var c1 = $('#c1').val();
             var c3 = $('#c3').val();
             var c4 = $('#c4_1').attr('checked') ? 40 : 60;
@@ -177,14 +141,14 @@
 </head>
 
 <body>
-    <div>
-        <h1><span>Таблица расчета стоимости напыления ППУ</span></h1>
-        <table class="table table-dark table-bordered">
+    <div class="container">
+        <h1 class="text-center"><span>Таблица расчета стоимости напыления ППУ</span></h1>
+        <table class="table table-dark table-bordered table-hover table-sm table-responsive  w-100 d-block d-md-table">
             <tbody>
                 <tr>
                     <td>Толщина напыления</td>
                     <td>мм</td>
-                    <td><input type="text" value="50" name="c3" id="c3" onchange="pn_changed()"></td>
+                    <td><input type="text" value="50" name="c3" id="c3" onchange="calcCostFoam()"></td>
                     <td colspan="3">
                         <span id="c3_text">(При толщине напыления меньше 50 мм наценка 15%)</span>
                         </span>
@@ -194,8 +158,8 @@
                     <td>Плотность напыляемого ППУ</td>
                     <td>кг/м³</td>
                     <td>
-                        <input type="radio" id="c4_1" name="plot_nap" value="40" checked="checked" onchange="pn_changed()">40&nbsp;
-                        <input type="radio" id="c4_2" name="plot_nap" value="60" onchange="pn_changed()">60
+                        <input type="radio" id="c4_1" name="plot_nap" value="40" checked="checked" onchange="calcCostFoam()">40&nbsp;
+                        <input type="radio" id="c4_2" name="plot_nap" value="60" onchange="calcCostFoam()">60
                     </td>
                     <td colspan="1">
                         <span id="c4_text">Коэф. теплопроводности 0,022</span>
@@ -204,13 +168,13 @@
                         <span id="c1_text">Курс USD</span>
                     </td>
                     <td colspan="1">
-                        <span><input size="3" type="text" value="25" name="c1" id="c1" onchange="pn_changed()"></span>
+                        <span><input size="3" type="text" value="25" name="c1" id="c1" onchange="calcCostFoam()"></span>
                     </td>
                 </tr>
-                <tr>
+                <tr class="table-active">
                     <td colspan="6"></td>
                 </tr>
-                <tr>
+                <tr class="table-active">
                     <td>Напыление на: </td>
                     <td>Ед. изм.</td>
                     <td>Кол-во</td>
@@ -221,7 +185,7 @@
                 <tr>
                     <td>Пол (перекрытие)</td>
                     <td>м²</td>
-                    <td><input onchange="pn_changed()" type="text" size="3" name="c7" id="c7" value="0"></td>
+                    <td><input onchange="calcCostFoam()" type="text" size="3" name="c7" id="c7" value="0"></td>
                     <td></td>
                     <td><span id="e7">350</span></td>
                     <td><span id="f7">350</span></td>
@@ -229,7 +193,7 @@
                 <tr>
                     <td>Стены высотой до 3 метров</td>
                     <td>м²</td>
-                    <td><input onchange="pn_changed()" type="text" size="3" name="c8" id="c8" value="0"></td>
+                    <td><input onchange="calcCostFoam()" type="text" size="3" name="c8" id="c8" value="0"></td>
                     <td></td>
                     <td><span id="e8">350</span></td>
                     <td><span id="f8">700</span></td>
@@ -237,7 +201,7 @@
                 <tr>
                     <td>Стены высотой от 3 до 8 метров</td>
                     <td>м²</td>
-                    <td><input onchange="pn_changed()" type="text" size="3" name="c9" id="c9" value="0"></td>
+                    <td><input onchange="calcCostFoam()" type="text" size="3" name="c9" id="c9" value="0"></td>
                     <td>наценка 10%</td>
                     <td><span id="e9">385</span></td>
                     <td><span id="f9">1540</span></td>
@@ -245,7 +209,7 @@
                 <tr>
                     <td>Стены высотой выше 8 метров</td>
                     <td>м²</td>
-                    <td><input onchange="pn_changed()" type="text" size="3" name="c10" id="c10" value="0"></td>
+                    <td><input onchange="calcCostFoam()" type="text" size="3" name="c10" id="c10" value="0"></td>
                     <td>наценка 20%</td>
                     <td><span id="e10">420</td>
                     <td><span id="f10">1680</td>
@@ -253,12 +217,12 @@
                 <tr>
                     <td>Потолок</td>
                     <td>м²</td>
-                    <td><input onchange="pn_changed()" type="text" size="3" name="c11" id="c11" value="0"></td>
+                    <td><input onchange="calcCostFoam()" type="text" size="3" name="c11" id="c11" value="0"></td>
                     <td>наценка 20%</td>
                     <td><span id="e11">420</td>
                     <td><span id="f11">1680</td>
                 </tr>
-                <tr>
+                <tr class="table-active">
                     <td colspan="6"></td>
                 </tr>
                 <tr>
@@ -306,7 +270,7 @@
                     <td nowrap="nowrap">
                         <span id="c18" style="color: #ff0000;"></span>
                         <br>
-                        <input onclick="pn_changed(); return false" value="Результат" type="submit">
+                        <input onclick="calcCostFoam(); return false" value="Результат" type="submit">
                     </td>
                     <td colspan="2"><span style="color: #ff0000;">транспортировка по Украине:&nbsp;</span></td>
                     <td><span style="color: #ff0000;">5 грн*км</span></td>
@@ -315,14 +279,14 @@
         </table>
         <script type="text/javascript">
             // <![CDATA[
-            pn_changed();
+            calcCostFoam();
             // ]]>
         </script>
         <br>
         <span><strong>Стоимости услуг по напылению ППУ в таблице расчитываеться по нескольким критериям:</strong></span>
         <br>1. Толщина слоя напыления пенополиуретана: при толщине меньше 50 мм + 15% к стоимости.
         <br>2. Категория сложности: + 10-20% к стоимости.
-        <br>3. Объем работ: до 100&nbsp;м<sup>2</sup>, от 100 до 200&nbsp;м<sup>2</sup>, от 200 до 500&nbsp;м<sup>2</sup>, от 500м<sup>2</sup>&nbsp;и выше - <strong><span style="color: #ffffff;">с увеличением объема стоимость за&nbsp;м<sup>2</sup>&nbsp;уменьшаеться!</span></strong>
+        <br>3. Объем работ: до 100&nbsp;м<sup>2</sup>, от 100 до 200&nbsp;м<sup>2</sup>, от 200 до 500&nbsp;м<sup>2</sup>, от 500м<sup>2</sup>&nbsp;и выше - <strong>с увеличением объема стоимость за&nbsp;м<sup>2</sup>&nbsp;уменьшаеться!</strong>
         <br><br>
         <strong>Так же могут учитываться следуюющие наценки:</strong>
         <br>1. Напыление на пено- (газо-) бетон - за счет впитываемости ППУ перерасход материала первого слоя составляет 30%.
