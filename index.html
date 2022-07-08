@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Расчет стоимости напыления пенополиуретана (ППУ)</title>
+    <script type="text/javascript">
+        // <![CDATA[
+        function pn_changed() {
+            var c1_k = 25;
+            var tn = document.getElementById('c1');
+            var c1 = parseInt(tn.value, 10);
+            if (isNaN(c1)) {
+                c1 = 25;
+                tn.value = '25';
+            }
+            var c3_k = 1;
+            var tn = document.getElementById('c3');
+            var c3 = parseInt(tn.value, 10);
+            if (isNaN(c3)) {
+                c3 = 50;
+                tn.value = '50';
+            }
+            if (c3 < 50) {
+                document.getElementById('c3_text').innerHTML = "<font color=red><b>(При толщине напыления меньше 50 мм наценка 15%)</b></font>";
+                c3_k = 1.15;
+            } else {
+                document.getElementById('c3_text').innerHTML = "(При толщине напыления меньше 50 мм наценка 15%)";
+                c3_k = 1;
+            }
+            var s1 = document.getElementById('c4_1');
+            var c4;
+            if (s1.checked) {
+                document.getElementById('c4_text').innerHTML = 'Коэф. теплопроводности 0,022';
+                c4 = 40;
+            } else {
+                document.getElementById('c4_text').innerHTML = 'Коэф. теплопроводности 0,023';
+                c4 = 60;
+            }
+            var c7 = parseFloat(document.getElementById('c7').value);
+            if (isNaN(c7)) {
+                c7 = 0;
+                document.getElementById('c7').value = c7;
+            }
+            var c8 = parseFloat(document.getElementById('c8').value);
+            if (isNaN(c8)) {
+                c8 = 0;
+                document.getElementById('c8').value = c8;
+            }
+            var c9 = parseFloat(document.getElementById('c9').value);
+            if (isNaN(c9)) {
+                c9 = 0;
+                document.getElementById('c9').value = c9;
+            }
+            var c10 = parseFloat(document.getElementById('c10').value);
+            if (isNaN(c10)) {
+                c10 = 0;
+                document.getElementById('c10').value = c10;
+            }
+            var c11 = parseFloat(document.getElementById('c11').value);
+            if (isNaN(c11)) {
+                c11 = 0;
+                document.getElementById('c11').value = c11;
+            }
+            var c13 = norm(c7 + c8 + c9 + c10 + c11);
+            document.getElementById('c13').innerHTML = c13;
+            var c14 = norm(c13 * c3 / 1000);
+            document.getElementById('c14').innerHTML = c14;
+            var c15 = norm((c4 + 8) * c3 / 1000);
+            document.getElementById('c15').innerHTML = c15;
+            var c16 = norm(c13 * c15);
+            document.getElementById('c16').innerHTML = c16;
+            // =IF(C4=40;IF(C14<5;12000;IF(C14<10;11000;IF(C14<15;10000;9000)))*IF(C3<50;1.1;1);IF(C14<5;15500;IF(C14<10;14500;IF(C14<15;12500;11000)))*IF(C3<50;1.1;1))
+            var c17 = norm((c4 == 40 ? (c13 < 100 ? 200 : (c13 < 200 ? 190 : (c13 < 500 ? 175 : 175))) : (c13 < 100 ? 290 : (c13 < 275 ? 275 : (c13 < 500 ? 250 : 250)))) * c3_k * c1);
+            document.getElementById('c17').innerHTML = c17;
+            var e7 = norm(c17 * c3 / 1000);
+            document.getElementById('e7').innerHTML = e7;
+            var e8 = norm(c17 * c3 / 1000);
+            document.getElementById('e8').innerHTML = e8;
+            var e9 = norm(c17 * c3 / 1000 * 1.1);
+            document.getElementById('e9').innerHTML = e9;
+            var e10 = norm(c17 * c3 / 1000 * 1.2);
+            document.getElementById('e10').innerHTML = e10;
+            var e11 = norm(c17 * c3 / 1000 * 1.2);
+            document.getElementById('e11').innerHTML = e11;
+            var f7 = norm(c7 * e7);
+            document.getElementById('f7').innerHTML = f7;
+            var f8 = norm(c8 * e8);
+            document.getElementById('f8').innerHTML = f8;
+            var f9 = norm(c9 * e9);
+            document.getElementById('f9').innerHTML = f9;
+            var f10 = norm(c10 * e10);
+            document.getElementById('f10').innerHTML = f10;
+            var f11 = norm(c11 * e11);
+            document.getElementById('f11').innerHTML = f11;
+            //var c18 = 1*f7+1*f8+1*f9+1*f10+1*f11;
+            var c18 = norm(f7 + f8 + f9 + f10 + f11);
+            //var c18 = f7.toFixed(2)+f8.toFixed(2)+f9.toFixed(2)+f10.toFixed(2)+f11.toFixed(2);
+            //c18 = c18==0?0:(c18<30000?30000:c18);
+            document.getElementById('c18').innerHTML = c18;
+            $('#c17').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#c18').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#f7').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#f8').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#f9').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#f10').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+            $('#f11').currency({
+                s: " ",
+                d: ".",
+                c: 2
+            });
+        }
+
+        function norm(x) {
+            if (isNaN(x)) {
+                return 0;
+            }
+            var n = new Number(x);
+            return new Number(n.toFixed(2));
+            //return n;
+        }
+
+        function do_submit() {
+            var c1 = $('#c1').val();
+            var c3 = $('#c3').val();
+            var c4 = $('#c4_1').attr('checked') ? 40 : 60;
+            var c7 = $('#c7').val();
+            var c8 = $('#c8').val();
+            var c9 = $('#c9').val();
+            var c10 = $('#c10').val();
+            var c11 = $('#c11').val();
+            var zakaz_text = "Толщина:  " + c3 +
+                "\nПлотность:      " + c4 +
+                "\nКурс USD:  " + $('#c1').text() +
+                "\nПол, перекрытие: " + c7 + ", цена: " + $('#e7').text() + ", сумма: " + $('#f7').text() +
+                "\nСтены до 3х: " + c8 + ", цена: " + $('#e8').text() + ", сумма: " + $('#f8').text() +
+                "\nСтены от 3 до 8: " + c9 + ", цена: " + $('#e9').text() + ", сумма: " + $('#f9').text() +
+                "\nСтены выше 8: " + c10 + ", цена: " + $('#e10').text() + ", сумма: " + $('#f10').text() +
+                "\nПотолок, подпол:     " + c11 + ", цена: " + $('#e11').text() + ", сумма: " + $('#f11').text() +
+                "\n\nОбщая площадь напыления: " + $('#c13').text() +
+                "\nОбщий объем ППУ: " + $('#c14').text() +
+                "\nВес одного метра квадратного: " + $('#c15').text() +
+                "\nОбщий вес напыляемого ППУ: " + $('#c16').text() +
+                "\nЦена за один метр кубический: " + $('#c17').text() +
+                "\nОбщая сумма за напыление ППУ: " + $('#c18').text() +
+                "\n\n";
+            return false;
+        }
+        // ]]>
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+
+<body>
+    <div>
+        <h1><span>Таблица расчета стоимости напыления ППУ</span></h1>
+        <table class="table table-dark table-bordered">
+            <tbody>
+                <tr>
+                    <td>Толщина напыления</td>
+                    <td>мм</td>
+                    <td><input type="text" value="50" name="c3" id="c3" onchange="pn_changed()"></td>
+                    <td colspan="3">
+                        <span id="c3_text">(При толщине напыления меньше 50 мм наценка 15%)</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Плотность напыляемого ППУ</td>
+                    <td>кг/м³</td>
+                    <td>
+                        <input type="radio" id="c4_1" name="plot_nap" value="40" checked="checked" onchange="pn_changed()">40&nbsp;
+                        <input type="radio" id="c4_2" name="plot_nap" value="60" onchange="pn_changed()">60
+                    </td>
+                    <td colspan="1">
+                        <span id="c4_text">Коэф. теплопроводности 0,022</span>
+                    </td>
+                    <td colspan="1">
+                        <span id="c1_text">Курс USD</span>
+                    </td>
+                    <td colspan="1">
+                        <span><input size="3" type="text" value="25" name="c1" id="c1" onchange="pn_changed()"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <td>Напыление на: </td>
+                    <td>Ед. изм.</td>
+                    <td>Кол-во</td>
+                    <td>Категория сложности</td>
+                    <td>Цена, грн</td>
+                    <td>Сумма, грн</td>
+                </tr>
+                <tr>
+                    <td>Пол (перекрытие)</td>
+                    <td>м²</td>
+                    <td><input onchange="pn_changed()" type="text" size="3" name="c7" id="c7" value="0"></td>
+                    <td></td>
+                    <td><span id="e7">350</span></td>
+                    <td><span id="f7">350</span></td>
+                </tr>
+                <tr>
+                    <td>Стены высотой до 3 метров</td>
+                    <td>м²</td>
+                    <td><input onchange="pn_changed()" type="text" size="3" name="c8" id="c8" value="0"></td>
+                    <td></td>
+                    <td><span id="e8">350</span></td>
+                    <td><span id="f8">700</span></td>
+                </tr>
+                <tr>
+                    <td>Стены высотой от 3 до 8 метров</td>
+                    <td>м²</td>
+                    <td><input onchange="pn_changed()" type="text" size="3" name="c9" id="c9" value="0"></td>
+                    <td>наценка 10%</td>
+                    <td><span id="e9">385</span></td>
+                    <td><span id="f9">1540</span></td>
+                </tr>
+                <tr>
+                    <td>Стены высотой выше 8 метров</td>
+                    <td>м²</td>
+                    <td><input onchange="pn_changed()" type="text" size="3" name="c10" id="c10" value="0"></td>
+                    <td>наценка 20%</td>
+                    <td><span id="e10">420</td>
+                    <td><span id="f10">1680</td>
+                </tr>
+                <tr>
+                    <td>Потолок</td>
+                    <td>м²</td>
+                    <td><input onchange="pn_changed()" type="text" size="3" name="c11" id="c11" value="0"></td>
+                    <td>наценка 20%</td>
+                    <td><span id="e11">420</td>
+                    <td><span id="f11">1680</td>
+                </tr>
+                <tr>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <td>Общая площадь напыления:</span></td>
+                    <td>м²</td>
+                    <td><span id="c13"></span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Общий объем ППУ:</td>
+                    <td>м³</td>
+                    <td><span id="c14"></span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Вес одного метра квадратного:</td>
+                    <td>кг</td>
+                    <td><span id="c15">2.4</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Общий вес напыляемого ППУ:</td>
+                    <td>кг</td>
+                    <td><span id="c16">36</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Цена за один метр кубический:</td>
+                    <td>гривна</td>
+                    <td><span id="c17"></span></td>
+                    <td colspan="2">транспортировка по Днепропетровску:&nbsp;</td>
+                    <td>бесплатно</td>
+                </tr>
+                <tr>
+                    <td>Общая сумма за напыление ППУ:</td>
+                    <td>гривень</td>
+                    <td nowrap="nowrap">
+                        <span id="c18" style="color: #ff0000;"></span>
+                        <br>
+                        <input onclick="pn_changed(); return false" value="Результат" type="submit">
+                    </td>
+                    <td colspan="2"><span style="color: #ff0000;">транспортировка по Украине:&nbsp;</span></td>
+                    <td><span style="color: #ff0000;">5 грн*км</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <script type="text/javascript">
+            // <![CDATA[
+            pn_changed();
+            // ]]>
+        </script>
+        <br>
+        <span><strong>Стоимости услуг по напылению ППУ в таблице расчитываеться по нескольким критериям:</strong></span>
+        <br>1. Толщина слоя напыления пенополиуретана: при толщине меньше 50 мм + 15% к стоимости.
+        <br>2. Категория сложности: + 10-20% к стоимости.
+        <br>3. Объем работ: до 100&nbsp;м<sup>2</sup>, от 100 до 200&nbsp;м<sup>2</sup>, от 200 до 500&nbsp;м<sup>2</sup>, от 500м<sup>2</sup>&nbsp;и выше - <strong><span style="color: #ffffff;">с увеличением объема стоимость за&nbsp;м<sup>2</sup>&nbsp;уменьшаеться!</span></strong>
+        <br><br>
+        <strong>Так же могут учитываться следуюющие наценки:</strong>
+        <br>1. Напыление на пено- (газо-) бетон - за счет впитываемости ППУ перерасход материала первого слоя составляет 30%.
+        <br>2. Напыление снаружи здания при ветренной погоде - за счет сноса ныпыляемого ППУ перерасход составляет до 50%.
+        <br>3. Температура воздуха ниже +20&nbsp;°C и влажности выше 70 % -&nbsp;перерасход составляет до 50%.
+        <br><br>
+        <div style="padding-left: 10px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: thin; border-bottom-width: thin; border-left-width: thick; border-top-color: #3541f8; border-bottom-color: #3541f8; border-left-color: #3541f8;">
+            <span>Основным требованием для осуществления работ по напылению является возможность подключения нашего оборудования.</span>
+            <br>
+            <span>Мы работаем на установках высокого и низкого давления (ВД и НД), для которых такие требования по электропитанию (ЭП):</span><br>
+            <span><strong>1. Установка высокого давления:</strong> </span><br><span>- 1-й источник 3ф ~380В максимальной мощностью 25кВт (возможность подключения до 35м);</span><br>
+            <span>- 2-й источник&nbsp;3ф&nbsp;~380В максимальной мощностью 5,5кВт&nbsp;(возможность подключения до 35м).</span><br><span><strong>2. Установка низкого давления:</strong></span><br>
+            <span>- 1-й источник 1ф&nbsp;~220В максимальной мощностью 3,7кВт (возможность подключения 30м);</span><br><span>- 2-й источник&nbsp;1ф&nbsp;~220В максимальной мощностью 2,2кВт&nbsp;(возможность подключения 30м).</span><br>
+            <span><span >Заказчик может вести обеспечение ЭП своими силами и средствами, арендуя или закупая необходимые источники ЭП и кабельную продукцию. Если заказчик не в состоянии обеспечить электропитание установки для производства ППУ собственными силами, существует АРЕНДА: генераторов и кабельного имущества, стоимость которой рассчитывается отдельно согласно перечня цен выставленного для заказчика.</span>            <br><strong>Базовые величины стоимости аренды:</strong></span><br><span><strong>Генератор:</strong></span><br><span>32кВт 3ф&nbsp;~380В&nbsp;/расход 10л ДТ/ - 1700-2000грн/сутки *ВД</span><br>
+            <span>6кВт 1ф&nbsp;~220В&nbsp;/расход 2,5л А-95/ - 600-800грн/сутки *НД</span><br><span><strong>Кабельная продукция:</strong></span><br><span>30м ПВС 10х5 + 30м ПВС 2,5х4 - 100грн/сутки *ВД</span><br>
+            <span>30м ПВС 3,5х3 50грн/сутки *НД</span><br><span>(напыление проводиться не более 12ч/сутки, производительность от 7-20м<sup>3 </sup>ППУ в зависимости от сложности работ)</span></div>
+        <br><span><strong>Конечная цена зависит от многих дополнительных факторов и не факт, что цена возврастет, возможно наоборот</strong> (торг, скидки или особые условия работы).&nbsp;</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+</body>
+
+</html>
